@@ -57,6 +57,8 @@ public class ControlDao {
         SQLiteDatabase db = helper.getReadableDatabase();
         db.execSQL("update fly set phonenum =? where name = ?",new Object[]{newnum,name});
         db.close();
+
+        //
     }
 
     /**
