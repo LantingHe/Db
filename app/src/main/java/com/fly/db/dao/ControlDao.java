@@ -23,6 +23,7 @@ public class ControlDao {
     public ControlDao(Context context){
         helper = new MySQLiteOpenHelper(context);
     }
+
     /**
      * 添加一条记录到数据库
      * @param name 姓名
@@ -35,17 +36,13 @@ public class ControlDao {
     }
 
     /**
-     * 按姓名查找记录是够存在
+     * 删除一条记录
      * @param name 姓名
-     * @return true 存在 false 不存在
      */
-    public boolean find(String name){
+    public void delete(String name) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from fly where name =?", new String[]{name});
-        boolean result = cursor.moveToNext();
-        cursor.close();
+        db.execSQL("delete from fly where name =?", new Object[]{name});
         db.close();
-        return result;
     }
 
     /**
@@ -57,18 +54,36 @@ public class ControlDao {
         SQLiteDatabase db = helper.getReadableDatabase();
         db.execSQL("update fly set phonenum =? where name = ?",new Object[]{newnum,name});
         db.close();
-
         //
     }
 
     /**
-     * 删除一条记录
+     * 按姓名查找记录是够存在
      * @param name 姓名
+     * @return true 存在 false 不存在
      */
-    public void delete(String name){
+    public boolean find(String name) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("delete from fly where name =?",new Object[]{name});
+        Cursor cursor = db.rawQuery("select * from fly where name =?", new String[]{name});
+        boolean result = cursor.moveToNext();
+        cursor.close();
         db.close();
+        return result;
+    }
+
+    /**
+     * 按姓名查找记录是够存在
+     *
+     * @param name 姓名
+     * @return string 电话号码
+     */
+    public String findPhone(String name) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from fly where name =?", new String[]{name});
+        String phone = cursor.getString(cursor.getColumnIndex("phonenum"));
+        cursor.close();
+        db.close();
+        return phone;
     }
 
     /**
